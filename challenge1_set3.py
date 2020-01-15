@@ -52,4 +52,4 @@ for i in range(255):
 scores.sort(key=lambda x: x[1], reverse=True)
 
 for score in scores[:5]:
-    print(f"{round(score[1], 2):>7}) {score[2]}")
+    print(f"{round(score[1], 2):>7}) {score[0]:>3}^XOR) {score[2]}")
