@@ -69,7 +69,11 @@ def string_score(string):
         score += _FREQ_TABLE[char if char in _FREQ_TABLE else "INVALID"]
     return score
 
-def hamming_distance(s1, s2):
+def hamming_distance_bytes(s1, s2):
+    b_diff = xor_bytes(s1, s2)
+    return sum(bin(x).count("1") for x in b_diff)
+
+def hamming_distance_strings(s1, s2):
     b_diff = xor_strings(s1, s2, decode=False)
     return sum(bin(x).count("1") for x in b_diff)
 
