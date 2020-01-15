@@ -46,6 +46,7 @@ def get_string_score(string):
     score = 0
     for char in string:
         score += _FREQ_TABLE[char if char in _FREQ_TABLE else "INVALID"]
+    return score
 
 if __name__ == "__main__":
     _test()
