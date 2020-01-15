@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import requests
 import sys
-from functions import get_string_score
+from functions import string_score
 
 r = requests.get("https://cryptopals.com/static/challenge-data/4.txt")
 text = r.text
@@ -12,7 +12,7 @@ for line_hex in text.splitlines():
 
     for i in range(256):
         string = "".join(chr(b ^ i) for b in line_bytes)
-        score = get_string_score(string)
+        score = string_score(string)
         scores.append((score, string))
 
 scores.sort(key=lambda x: x[0], reverse=True)

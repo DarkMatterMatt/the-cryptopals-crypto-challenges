@@ -63,13 +63,13 @@ def xor_bytes(b_str, b_key):
         b_str[i] ^= b_key[i % key_len]
     return b_str
 
-def get_string_score(string):
+def string_score(string):
     score = 0
     for char in string:
         score += _FREQ_TABLE[char if char in _FREQ_TABLE else "INVALID"]
     return score
 
-def get_hamming_distance(s1, s2):
+def hamming_distance(s1, s2):
     b_diff = xor_strings(s1, s2, decode=False)
     return sum(bin(x).count("1") for x in b_diff)
 
