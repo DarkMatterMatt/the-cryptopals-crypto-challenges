@@ -37,6 +37,12 @@ def _test():
     assert xor_bytes(bytearray("I go crazy when I hear a cymbal", "utf8"), bytes("ICE", "utf8")).hex() == "0063222663263b223f30633221262b690a652126243b632469203c24212425"
     print("Tests passed successfully")
 
+# https://stackoverflow.com/a/312464/6595777
+def chunks(lst, n):
+    """Yield successive n-sized chunks from lst."""
+    for i in range(0, len(lst), n):
+        yield lst[i:i + n]
+
 def hex2base64(hex_str):
     b = bytes.fromhex(hex_str)
     return base64.b64encode(b).decode("ascii")
