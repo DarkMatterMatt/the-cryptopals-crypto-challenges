@@ -128,5 +128,6 @@ for i in range(255):
         
 scores.sort(key=lambda x: x[1], reverse=True)
 
-for score in scores[:5]:
-    print(f"{score[1]:>7}) {score[0]:>3}^XOR) {score[2]}")
+scores.insert(0, ("XOR", "Score", "Result"))
+for score in scores[:6]:
+    print(f"{score[1]:>7} | {score[0]:>3} | {score[2]}")
