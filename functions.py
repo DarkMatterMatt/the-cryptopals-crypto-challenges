@@ -45,10 +45,17 @@ def base642hex(base64_str):
     b = base64.b64decode(base64_str)
     return b.hex()
 
-def xor_hex(hex_str, hex_key):
-    b_str = bytearray.fromhex(hex_str)
-    b_key = bytes.fromhex(hex_key)
-    return xor_bytes(b_str, b_key).hex()
+def xor_strings(str1, str2, decode=True):
+    xor = xor_bytes(bytearray(str1, "utf8"), bytes(str2, "utf8"))
+    if decode:
+        return xor.decode("utf8")
+    return xor
+
+def xor_hex(hex1, hex2, decode=True):
+    xor = xor_bytes(bytearray.fromhex(hex1), bytes.fromhex(hex2))
+    if decode:
+        return xor.hex()
+    return xor
 
 def xor_bytes(b_str, b_key):
     key_len = len(b_key)
@@ -61,6 +68,10 @@ def get_string_score(string):
     for char in string:
         score += _FREQ_TABLE[char if char in _FREQ_TABLE else "INVALID"]
     return score
+
+def get_hamming_distance(s1, s2):
+    b_diff = xor_strings(s1, s2, decode=False)
+    return sum(bin(x).count("1") for x in b_diff)
 
 if __name__ == "__main__":
     _test()
