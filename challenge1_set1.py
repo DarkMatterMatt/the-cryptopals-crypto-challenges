@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+
+# Convert hex to base64
+
 import base64
 import sys
 
