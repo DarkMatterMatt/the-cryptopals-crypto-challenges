@@ -3,7 +3,7 @@ import sys
 
 # http://www.fitaly.com/board/domper3/posts/136.html
 FREQ_TABLE = {
-    "INVALID": -10000,
+    "INVALID": -80000,
     "\r": 0,
     "\n": 20000,
     "\t": 136,
