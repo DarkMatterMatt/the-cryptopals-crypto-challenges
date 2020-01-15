@@ -31,16 +31,25 @@ _FREQ_TABLE = {
 def _test():
     assert hex2base64("49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d") == "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t"
     assert xor_hex("1c0111001f010100061a024b53535009181c", "686974207468652062756c6c277320657965") == "746865206b696420646f6e277420706c6179"
+    assert get_string_score("The quick brown fox jumped over the lazy dog.") == 6131490
+    assert xor_bytes(bytearray("Burning 'em, if you ain't quick and nimble", "utf8"), bytes("ICE", "utf8")).hex() == "0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272a282b2f20"
+    assert xor_bytes(bytearray("I go crazy when I hear a cymbal", "utf8"), bytes("ICE", "utf8")).hex() == "0063222663263b223f30633221262b690a652126243b632469203c24212425"
+    print("Tests passed successfully")
 
 def hex2base64(hex_str):
     b = bytes.fromhex(hex_str)
     return base64.b64encode(b).decode("ascii")
 
-def xor_hex(hex_str1, hex_str2):
-    b1 = bytes.fromhex(hex_str1)
-    b2 = bytes.fromhex(hex_str2)
-    b3 = bytes(a ^ b for (a, b) in zip(b1, b2))
-    return b3.hex()
+def xor_hex(hex_str, hex_key):
+    b_str = bytearray.fromhex(hex_str)
+    b_key = bytes.fromhex(hex_key)
+    return xor_bytes(b_str, b_key).hex()
+
+def xor_bytes(b_str, b_key):
+    key_len = len(b_key)
+    for i in range(len(b_str)):
+        b_str[i] ^= b_key[i % key_len]
+    return b_str
 
 def get_string_score(string):
     score = 0
