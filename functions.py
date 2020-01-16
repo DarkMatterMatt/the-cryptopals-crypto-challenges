@@ -69,10 +69,11 @@ def xor_hex(hex1, hex2, decode=True):
     return xor
 
 def xor_bytes(b_str, b_key):
+    xor = bytearray(b_str)
     key_len = len(b_key)
     for i in range(len(b_str)):
-        b_str[i] ^= b_key[i % key_len]
-    return b_str
+        xor[i] ^= b_key[i % key_len]
+    return xor
 
 def string_score(string):
     score = 0
@@ -94,14 +95,15 @@ def solve_xor_keysize_bytes(bytes_to_process, key_size):
     chunked = chunks(b, key_size)
     transposed = map(bytes, zip(*chunked))
 
-    key, score, decrypted = b"", 0, ""
+    key, score = [], 0
     for row in transposed:
-        row_xor, row_score, row_decrypted = solve_xor_bytes(row)
-        key += bytes((row_xor,))
+        row_xor, row_score, _ = solve_xor_bytes(row)
+        key.append(row_xor)
         score += row_score
-        decrypted += row_decrypted
 
-    return key.decode("utf8"), score, xor_bytes(bytes_to_process, key).decode("utf8")
+    key = bytes(key)
+    decrypted = xor_bytes(bytes_to_process, key).decode("utf8")
+    return key.decode("utf8"), score, decrypted
 
 def hamming_distance_bytes(s1, s2):
     b_diff = xor_bytes(s1, s2)
