@@ -38,8 +38,8 @@ def _test():
     assert solve_xor_keysize_bytes(xor_strings(TEST_STRING, "TEST", decode=False), 4) == ('TEST', 6095550, TEST_STRING)
     assert string_score(TEST_STRING) == 6131490
     assert xor_hex("1c0111001f010100061a024b53535009181c", "686974207468652062756c6c277320657965") == "746865206b696420646f6e277420706c6179"
-    assert xor_bytes(bytearray("Burning 'em, if you ain't quick and nimble", "utf8"), bytes("ICE", "utf8")).hex() == "0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272a282b2f20"
-    assert xor_bytes(bytearray("I go crazy when I hear a cymbal", "utf8"), bytes("ICE", "utf8")).hex() == "0063222663263b223f30633221262b690a652126243b632469203c24212425"
+    assert xor_bytes(bytes("Burning 'em, if you ain't quick and nimble", "utf8"), bytes("ICE", "utf8")).hex() == "0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272a282b2f20"
+    assert xor_bytes(bytes("I go crazy when I hear a cymbal", "utf8"), bytes("ICE", "utf8")).hex() == "0063222663263b223f30633221262b690a652126243b632469203c24212425"
     print("Tests passed successfully")
 
 # https://stackoverflow.com/a/312464/6595777
@@ -57,13 +57,13 @@ def base642hex(base64_str):
     return b.hex()
 
 def xor_strings(str1, str2, decode=True):
-    xor = xor_bytes(bytearray(str1, "utf8"), bytes(str2, "utf8"))
+    xor = xor_bytes(bytes(str1, "utf8"), bytes(str2, "utf8"))
     if decode:
         return xor.decode("utf8")
     return xor
 
 def xor_hex(hex1, hex2, decode=True):
-    xor = xor_bytes(bytearray.fromhex(hex1), bytes.fromhex(hex2))
+    xor = xor_bytes(bytes.fromhex(hex1), bytes.fromhex(hex2))
     if decode:
         return xor.hex()
     return xor
