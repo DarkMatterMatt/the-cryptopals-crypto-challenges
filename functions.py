@@ -29,12 +29,15 @@ _FREQ_TABLE = {
 }
 
 def _test():
+    TEST_STRING = "The quick brown fox jumped over the lazy dog."
     assert hex2base64("49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d") == "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t"
     assert base642hex("SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t") == "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d"
     assert xor_hex("1c0111001f010100061a024b53535009181c", "686974207468652062756c6c277320657965") == "746865206b696420646f6e277420706c6179"
-    assert string_score("The quick brown fox jumped over the lazy dog.") == 6131490
+    assert string_score(TEST_STRING) == 6131490
     assert xor_bytes(bytearray("Burning 'em, if you ain't quick and nimble", "utf8"), bytes("ICE", "utf8")).hex() == "0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272a282b2f20"
     assert xor_bytes(bytearray("I go crazy when I hear a cymbal", "utf8"), bytes("ICE", "utf8")).hex() == "0063222663263b223f30633221262b690a652126243b632469203c24212425"
+    assert solve_xor_bytes(xor_strings(TEST_STRING, "Z", decode=False)) == (ord("Z"), string_score(TEST_STRING), TEST_STRING)
+    assert solve_xor_keysize_bytes(xor_strings(TEST_STRING, "TEST", decode=False), 4) == ('TEST', 6095550, TEST_STRING)
     print("Tests passed successfully")
 
 # https://stackoverflow.com/a/312464/6595777
@@ -74,6 +77,29 @@ def string_score(string):
     for char in string:
         score += _FREQ_TABLE[char if char in _FREQ_TABLE else "INVALID"]
     return score
+
+def solve_xor_bytes(bytes_to_process):
+    best = (-1, -1e6, "") # XOR, score, decrypted
+    for i in range(256):
+        string = "".join(chr(b ^ i) for b in bytes_to_process)
+        score = string_score(string)
+        if score > best[1]:
+            best = i, score, string
+    return best
+
+def solve_xor_keysize_bytes(bytes_to_process, key_size):
+    b = bytes_to_process[:len(bytes_to_process)//key_size*key_size]
+    chunked = chunks(b, key_size)
+    transposed = map(bytes, zip(*chunked))
+
+    key, score, decrypted = b"", 0, ""
+    for row in transposed:
+        row_xor, row_score, row_decrypted = solve_xor_bytes(row)
+        key += bytes((row_xor,))
+        score += row_score
+        decrypted += row_decrypted
+
+    return key.decode("utf8"), score, xor_bytes(bytes_to_process, key).decode("utf8")
 
 def hamming_distance_bytes(s1, s2):
     b_diff = xor_bytes(s1, s2)
