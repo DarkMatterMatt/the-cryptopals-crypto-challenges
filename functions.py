@@ -113,5 +113,13 @@ def hamming_distance_strings(s1, s2):
     b_diff = xor_strings(s1, s2, decode=False)
     return sum(bin(x).count("1") for x in b_diff)
 
+def pkcs7_pad_bytes(block_size, bytes_to_pad):
+    padding = block_size - len(bytes_to_pad) % block_size
+    return bytes_to_pad + bytes([padding]) * padding
+
+def pkcs7_unpad_bytes(bytes_to_unpad):
+    padding = bytes_to_unpad[-1]
+    return bytes_to_unpad[:-padding]
+
 if __name__ == "__main__":
     _test()
